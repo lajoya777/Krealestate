@@ -35,15 +35,22 @@
 - [ ] Google Cloud: service account con acceso a `info@eko-realestate.com` Calendar + Maps Distance Matrix API habilitada.
 - [ ] OpenWeather: API key.
 
-### F0.3 — MCP Supabase + variables de entorno ⬜
-- [ ] Configurar MCP de Supabase en `.claude/settings.local.json` (scope local, gitignored). Apunta solo al proyecto del cliente.
-- [ ] `.env.local` cargado con todas las credenciales.
+### F0.3 — MCP Supabase + variables de entorno 🟦
+- [x] Configurar MCP de Supabase en `.mcp.json` (scope project). Apunta solo al proyecto del cliente.
+- [x] `.env.local` cargado con todas las credenciales (manual, fuera del sandbox de Claude Code).
 - [ ] Vercel: env vars cargadas en producción y preview.
 
-### F0.4 — Schema base ⬜
-- [ ] Migration inicial: `tenant_config` (1 fila, parametriza nombre/equipo/zonas/agente), `users`, `roles`, `human_agents`.
-- [ ] RLS habilitada en todas las tablas.
-- [ ] Policies por rol (`owner`, `agent_operator`, `viewer`).
+### F0.4 — Schema base ✅
+- [x] Migration inicial: `tenant_config` (1 fila, parametriza nombre/equipo/zonas/agente), `profiles` (extiende `auth.users` con role enum), `human_agents`.
+- [x] Trigger `handle_new_user` auto-crea profile al crear auth user.
+- [x] Trigger `prevent_role_self_escalation` cierra el agujero del self-update de role.
+- [x] RLS habilitada en todas las tablas.
+- [x] Helpers RLS (`current_role`, `is_owner`, `is_operator_or_above`) con `security definer` y `EXECUTE` revocado.
+- [x] Policies por operación y por rol (`owner`, `agent_operator`, `viewer`).
+- [x] `auth.uid()` envuelto en `(select auth.uid())` para evitar reevaluación por row.
+- [x] TS types generados en `lib/supabase/database.types.ts`.
+- [x] Clientes Supabase tipados con `<Database>` genérico.
+- [x] Advisors de seguridad: 0 warnings.
 
 ### F0.5 — Dashboard scaffold ⬜
 - [ ] Layout autenticado (`app/(dashboard)/`).
