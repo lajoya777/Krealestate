@@ -3,8 +3,8 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mi App",
-  description: "Creada con Inicializador Scalefy",
+  title: "K Real Estate · Plataforma interna",
+  description: "Panel de control de agentes IA y operaciones comerciales de K Real Estate.",
 };
 
 export default function RootLayout({

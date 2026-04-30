@@ -5,11 +5,11 @@ import type { Database } from "./database.types";
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 /**
- * Refresca la sesión de Supabase en cada request.
- * Llamado desde middleware.ts raíz.
+ * Refresca la sesión de Supabase en cada request y devuelve el user.
+ * El middleware raíz usa el user para decidir redirects.
  */
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  let response = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,9 +23,9 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({ request });
+          response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            response.cookies.set(name, value, options)
           );
         },
       },
@@ -33,7 +33,9 @@ export async function updateSession(request: NextRequest) {
   );
 
   // IMPORTANTE: no quitar. Refresca token si expiró.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return { response, user };
 }
